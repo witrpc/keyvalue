@@ -2,18 +2,18 @@
 <ul>
 <li>Imports:
 <ul>
-<li>interface <a href="#wasi:keyvalue_store_0.2.0_draft"><code>wasi:keyvalue/store@0.2.0-draft</code></a></li>
-<li>interface <a href="#wasi:keyvalue_atomics_0.2.0_draft"><code>wasi:keyvalue/atomics@0.2.0-draft</code></a></li>
-<li>interface <a href="#wasi:keyvalue_batch_0.2.0_draft"><code>wasi:keyvalue/batch@0.2.0-draft</code></a></li>
+<li>interface <a href="#wrpc:keyvalue_store_0.2.0_draft"><code>wrpc:keyvalue/store@0.2.0-draft</code></a></li>
+<li>interface <a href="#wrpc:keyvalue_atomics_0.2.0_draft"><code>wrpc:keyvalue/atomics@0.2.0-draft</code></a></li>
+<li>interface <a href="#wrpc:keyvalue_batch_0.2.0_draft"><code>wrpc:keyvalue/batch@0.2.0-draft</code></a></li>
 </ul>
 </li>
 <li>Exports:
 <ul>
-<li>interface <a href="#wasi:keyvalue_watcher_0.2.0_draft"><code>wasi:keyvalue/watcher@0.2.0-draft</code></a></li>
+<li>interface <a href="#wrpc:keyvalue_watcher_0.2.0_draft"><code>wrpc:keyvalue/watcher@0.2.0-draft</code></a></li>
 </ul>
 </li>
 </ul>
-<h2><a name="wasi:keyvalue_store_0.2.0_draft"></a>Import interface wasi:keyvalue/store@0.2.0-draft</h2>
+<h2><a name="wrpc:keyvalue_store_0.2.0_draft"></a>Import interface wrpc:keyvalue/store@0.2.0-draft</h2>
 <p>A keyvalue interface that provides eventually consistent key-value operations.</p>
 <p>Each of these operations acts on a single key-value pair.</p>
 <p>The value in the key-value pair is defined as a <code>u8</code> byte array and the intention is that it is
@@ -56,7 +56,7 @@ still see A or B</p>
 </li>
 </ul>
 <h4><a name="key_response"></a><code>record key-response</code></h4>
-<p>A response to a <code>list-keys</code> operation.</p>
+<p>A response to a <a href="#list_keys"><code>list-keys</code></a> operation.</p>
 <h5>Record Fields</h5>
 <ul>
 <li>
@@ -69,7 +69,9 @@ still see A or B</p>
 there are no more keys to fetch.
 </li>
 </ul>
-<h4><a name="bucket"></a><code>resource bucket</code></h4>
+<hr />
+<h3>Functions</h3>
+<h4><a name="get"></a><code>get: func</code></h4>
 <p>A bucket is a collection of key-value pairs. Each key-value pair is stored as a entry in the
 bucket, and the bucket itself acts as a collection of all these entries.</p>
 <p>It is worth noting that the exact terminology for bucket in key-value stores can very
@@ -83,78 +85,64 @@ depending on the specific implementation. For example:</p>
 <li>Memcached calls a collection of key-value pairs a slab</li>
 <li>Azure Cosmos DB calls a collection of key-value pairs a container</li>
 </ol>
-<h2>In this interface, we use the term <a href="#bucket"><code>bucket</code></a> to refer to a collection of key-value pairs</h2>
-<h3>Functions</h3>
-<h4><a name="open"></a><code>open: func</code></h4>
-<p>Get the bucket with the specified identifier.</p>
-<p><code>identifier</code> must refer to a bucket provided by the host.</p>
-<p><a href="#error.no_such_store"><code>error::no-such-store</code></a> will be raised if the <code>identifier</code> is not recognized.</p>
-<h5>Params</h5>
-<ul>
-<li><a name="open.identifier"></a><code>identifier</code>: <code>string</code></li>
-</ul>
-<h5>Return values</h5>
-<ul>
-<li><a name="open.0"></a> result&lt;own&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
-</ul>
-<h4><a name="method_bucket.get"></a><code>[method]bucket.get: func</code></h4>
-<p>Get the value associated with the specified <code>key</code></p>
+<p>In this interface, we use the term <code>bucket</code> to refer to a collection of key-value pairs
+Get the value associated with the specified <code>key</code></p>
 <p>The value is returned as an option. If the key-value pair exists in the
 store, it returns <code>Ok(value)</code>. If the key does not exist in the
 store, it returns <code>Ok(none)</code>.</p>
 <p>If any other error occurs, it returns an <code>Err(error)</code>.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="method_bucket.get.self"></a><code>self</code>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
-<li><a name="method_bucket.get.key"></a><code>key</code>: <code>string</code></li>
+<li><a name="get.bucket"></a><code>bucket</code>: <code>string</code></li>
+<li><a name="get.key"></a><code>key</code>: <code>string</code></li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="method_bucket.get.0"></a> result&lt;option&lt;list&lt;<code>u8</code>&gt;&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="get.0"></a> result&lt;option&lt;list&lt;<code>u8</code>&gt;&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h4><a name="method_bucket.set"></a><code>[method]bucket.set: func</code></h4>
+<h4><a name="set"></a><code>set: func</code></h4>
 <p>Set the value associated with the key in the store. If the key already
 exists in the store, it overwrites the value.</p>
 <p>If the key does not exist in the store, it creates a new key-value pair.</p>
 <p>If any other error occurs, it returns an <code>Err(error)</code>.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="method_bucket.set.self"></a><code>self</code>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
-<li><a name="method_bucket.set.key"></a><code>key</code>: <code>string</code></li>
-<li><a name="method_bucket.set.value"></a><code>value</code>: list&lt;<code>u8</code>&gt;</li>
+<li><a name="set.bucket"></a><code>bucket</code>: <code>string</code></li>
+<li><a name="set.key"></a><code>key</code>: <code>string</code></li>
+<li><a name="set.value"></a><code>value</code>: list&lt;<code>u8</code>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="method_bucket.set.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="set.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h4><a name="method_bucket.delete"></a><code>[method]bucket.delete: func</code></h4>
+<h4><a name="delete"></a><code>delete: func</code></h4>
 <p>Delete the key-value pair associated with the key in the store.</p>
 <p>If the key does not exist in the store, it does nothing.</p>
 <p>If any other error occurs, it returns an <code>Err(error)</code>.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="method_bucket.delete.self"></a><code>self</code>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
-<li><a name="method_bucket.delete.key"></a><code>key</code>: <code>string</code></li>
+<li><a name="delete.bucket"></a><code>bucket</code>: <code>string</code></li>
+<li><a name="delete.key"></a><code>key</code>: <code>string</code></li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="method_bucket.delete.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="delete.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h4><a name="method_bucket.exists"></a><code>[method]bucket.exists: func</code></h4>
+<h4><a name="exists"></a><code>exists: func</code></h4>
 <p>Check if the key exists in the store.</p>
 <p>If the key exists in the store, it returns <code>Ok(true)</code>. If the key does
 not exist in the store, it returns <code>Ok(false)</code>.</p>
 <p>If any other error occurs, it returns an <code>Err(error)</code>.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="method_bucket.exists.self"></a><code>self</code>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
-<li><a name="method_bucket.exists.key"></a><code>key</code>: <code>string</code></li>
+<li><a name="exists.bucket"></a><code>bucket</code>: <code>string</code></li>
+<li><a name="exists.key"></a><code>key</code>: <code>string</code></li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="method_bucket.exists.0"></a> result&lt;<code>bool</code>, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="exists.0"></a> result&lt;<code>bool</code>, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h4><a name="method_bucket.list_keys"></a><code>[method]bucket.list-keys: func</code></h4>
+<h4><a name="list_keys"></a><code>list-keys: func</code></h4>
 <p>Get all the keys in the store with an optional cursor (for use in pagination). It
 returns a list of keys. Please note that for most KeyValue implementations, this is a
 can be a very expensive operation and so it should be used judiciously. Implementations
@@ -169,29 +157,26 @@ for more information.</p>
 <p>If any error occurs, it returns an <code>Err(error)</code>.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="method_bucket.list_keys.self"></a><code>self</code>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
-<li><a name="method_bucket.list_keys.cursor"></a><code>cursor</code>: option&lt;<code>u64</code>&gt;</li>
+<li><a name="list_keys.bucket"></a><code>bucket</code>: <code>string</code></li>
+<li><a name="list_keys.cursor"></a><code>cursor</code>: option&lt;<code>u64</code>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="method_bucket.list_keys.0"></a> result&lt;<a href="#key_response"><a href="#key_response"><code>key-response</code></a></a>, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="list_keys.0"></a> result&lt;<a href="#key_response"><a href="#key_response"><code>key-response</code></a></a>, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h2><a name="wasi:keyvalue_atomics_0.2.0_draft"></a>Import interface wasi:keyvalue/atomics@0.2.0-draft</h2>
+<h2><a name="wrpc:keyvalue_atomics_0.2.0_draft"></a>Import interface wrpc:keyvalue/atomics@0.2.0-draft</h2>
 <p>A keyvalue interface that provides atomic operations.</p>
 <p>Atomic operations are single, indivisible operations. When a fault causes an atomic operation to
 fail, it will appear to the invoker of the atomic operation that the action either completed
 successfully or did nothing at all.</p>
 <p>Please note that this interface is bare functions that take a reference to a bucket. This is to
 get around the current lack of a way to &quot;extend&quot; a resource with additional methods inside of
-wit. Future version of the interface will instead extend these methods on the base <a href="#bucket"><code>bucket</code></a>
+wit. Future version of the interface will instead extend these methods on the base <code>bucket</code>
 resource.</p>
 <hr />
 <h3>Types</h3>
-<h4><a name="bucket"></a><code>type bucket</code></h4>
-<p><a href="#bucket"><a href="#bucket"><code>bucket</code></a></a></p>
-<p>
-#### <a name="error"></a>`type error`
-[`error`](#error)
+<h4><a name="error"></a><code>type error</code></h4>
+<p><a href="#error"><a href="#error"><code>error</code></a></a></p>
 <p>
 ----
 <h3>Functions</h3>
@@ -203,7 +188,7 @@ to the given delta.</p>
 <p>If any other error occurs, it returns an <code>Err(error)</code>.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="increment.bucket"></a><a href="#bucket"><code>bucket</code></a>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
+<li><a name="increment.bucket"></a><code>bucket</code>: <code>string</code></li>
 <li><a name="increment.key"></a><code>key</code>: <code>string</code></li>
 <li><a name="increment.delta"></a><code>delta</code>: <code>u64</code></li>
 </ul>
@@ -211,7 +196,7 @@ to the given delta.</p>
 <ul>
 <li><a name="increment.0"></a> result&lt;<code>u64</code>, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h2><a name="wasi:keyvalue_batch_0.2.0_draft"></a>Import interface wasi:keyvalue/batch@0.2.0-draft</h2>
+<h2><a name="wrpc:keyvalue_batch_0.2.0_draft"></a>Import interface wrpc:keyvalue/batch@0.2.0-draft</h2>
 <p>A keyvalue interface that provides batch operations.</p>
 <p>A batch operation is an operation that operates on multiple keys at once.</p>
 <p>Batch operations are useful for reducing network round-trip time. For example, if you want to
@@ -224,15 +209,12 @@ of the keys may have been modified and some may not.</p>
 you should be able to &quot;read your writes.&quot;</p>
 <p>Please note that this interface is bare functions that take a reference to a bucket. This is to
 get around the current lack of a way to &quot;extend&quot; a resource with additional methods inside of
-wit. Future version of the interface will instead extend these methods on the base <a href="#bucket"><code>bucket</code></a>
+wit. Future version of the interface will instead extend these methods on the base <code>bucket</code>
 resource.</p>
 <hr />
 <h3>Types</h3>
-<h4><a name="bucket"></a><code>type bucket</code></h4>
-<p><a href="#bucket"><a href="#bucket"><code>bucket</code></a></a></p>
-<p>
-#### <a name="error"></a>`type error`
-[`error`](#error)
+<h4><a name="error"></a><code>type error</code></h4>
+<p><a href="#error"><a href="#error"><code>error</code></a></a></p>
 <p>
 ----
 <h3>Functions</h3>
@@ -245,7 +227,7 @@ list.</p>
 <p>If any other error occurs, it returns an <code>Err(error)</code>.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="get_many.bucket"></a><a href="#bucket"><code>bucket</code></a>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
+<li><a name="get_many.bucket"></a><code>bucket</code>: <code>string</code></li>
 <li><a name="get_many.keys"></a><code>keys</code>: list&lt;<code>string</code>&gt;</li>
 </ul>
 <h5>Return values</h5>
@@ -264,7 +246,7 @@ fail.</p>
 <p>Other concurrent operations may also be able to see the partial results.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="set_many.bucket"></a><a href="#bucket"><code>bucket</code></a>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
+<li><a name="set_many.bucket"></a><code>bucket</code>: <code>string</code></li>
 <li><a name="set_many.key_values"></a><code>key-values</code>: list&lt;(<code>string</code>, list&lt;<code>u8</code>&gt;)&gt;</li>
 </ul>
 <h5>Return values</h5>
@@ -283,35 +265,31 @@ fail.</p>
 <p>Other concurrent operations may also be able to see the partial results.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="delete_many.bucket"></a><a href="#bucket"><code>bucket</code></a>: borrow&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
+<li><a name="delete_many.bucket"></a><code>bucket</code>: <code>string</code></li>
 <li><a name="delete_many.keys"></a><code>keys</code>: list&lt;<code>string</code>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
 <li><a name="delete_many.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h2><a name="wasi:keyvalue_watcher_0.2.0_draft"></a>Export interface wasi:keyvalue/watcher@0.2.0-draft</h2>
+<h2><a name="wrpc:keyvalue_watcher_0.2.0_draft"></a>Export interface wrpc:keyvalue/watcher@0.2.0-draft</h2>
 <hr />
-<h3>Types</h3>
-<h4><a name="bucket"></a><code>type bucket</code></h4>
-<p><a href="#bucket"><a href="#bucket"><code>bucket</code></a></a></p>
-<p>
-----
 <h3>Functions</h3>
 <h4><a name="on_set"></a><code>on-set: func</code></h4>
-<p>Handle the <code>set</code> event for the given bucket and key. It includes a reference to the <a href="#bucket"><code>bucket</code></a>
+<p>A keyvalue interface that provides handle-watch operations.
+Handle the <a href="#set"><code>set</code></a> event for the given bucket and key. It includes a reference to the <code>bucket</code>
 that can be used to interact with the store.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="on_set.bucket"></a><a href="#bucket"><code>bucket</code></a>: own&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
+<li><a name="on_set.bucket"></a><code>bucket</code>: <code>string</code></li>
 <li><a name="on_set.key"></a><code>key</code>: <code>string</code></li>
 <li><a name="on_set.value"></a><code>value</code>: list&lt;<code>u8</code>&gt;</li>
 </ul>
 <h4><a name="on_delete"></a><code>on-delete: func</code></h4>
-<p>Handle the <code>delete</code> event for the given bucket and key. It includes a reference to the
-<a href="#bucket"><code>bucket</code></a> that can be used to interact with the store.</p>
+<p>Handle the <a href="#delete"><code>delete</code></a> event for the given bucket and key. It includes a reference to the
+<code>bucket</code> that can be used to interact with the store.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="on_delete.bucket"></a><a href="#bucket"><code>bucket</code></a>: own&lt;<a href="#bucket"><a href="#bucket"><code>bucket</code></a></a>&gt;</li>
+<li><a name="on_delete.bucket"></a><code>bucket</code>: <code>string</code></li>
 <li><a name="on_delete.key"></a><code>key</code>: <code>string</code></li>
 </ul>

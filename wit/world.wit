@@ -1,6 +1,6 @@
-package wasi:keyvalue@0.2.0-draft;
+package wrpc:keyvalue@0.2.0-draft;
 
-/// The `wasi:keyvalue/imports` world provides common APIs for interacting with key-value stores.
+/// The `wrpc:keyvalue/imports` world provides common APIs for interacting with key-value stores.
 /// Components targeting this world will be able to do:
 /// 
 /// 1. CRUD (create, read, update, delete) operations on key-value stores.
