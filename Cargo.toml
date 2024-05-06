@@ -1,0 +1,13 @@
+[package]
+name = "wrpc-interface-keyvalue"
+version = "0.14.0"
+description = "wRPC keyvalue interface"
+
+authors = ["Roman Volosatovs <rvolosatovs@riseup.net>"]
+categories = ["wasm"]
+edition = "2021"
+license = "Apache-2.0 WITH LLVM-exception"
+repository = "https://github.com/wrpc/keyvalue"
+
+[dependencies]
+wit-bindgen-wrpc = "0.3.6"
