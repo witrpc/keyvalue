@@ -9,13 +9,13 @@ Components targeting this world will be able to do:</p>
 <ul>
 <li>Imports:
 <ul>
-<li>interface <a href="#wrpc:keyvalue_store_0.2.0_draft"><code>wrpc:keyvalue/store@0.2.0-draft</code></a></li>
-<li>interface <a href="#wrpc:keyvalue_atomics_0.2.0_draft"><code>wrpc:keyvalue/atomics@0.2.0-draft</code></a></li>
-<li>interface <a href="#wrpc:keyvalue_batch_0.2.0_draft"><code>wrpc:keyvalue/batch@0.2.0-draft</code></a></li>
+<li>interface <a href="#wrpc_keyvalue_store_0_2_0_draft"><code>wrpc:keyvalue/store@0.2.0-draft</code></a></li>
+<li>interface <a href="#wrpc_keyvalue_atomics_0_2_0_draft"><code>wrpc:keyvalue/atomics@0.2.0-draft</code></a></li>
+<li>interface <a href="#wrpc_keyvalue_batch_0_2_0_draft"><code>wrpc:keyvalue/batch@0.2.0-draft</code></a></li>
 </ul>
 </li>
 </ul>
-<h2><a name="wrpc:keyvalue_store_0.2.0_draft"></a>Import interface wrpc:keyvalue/store@0.2.0-draft</h2>
+<h2><a name="wrpc_keyvalue_store_0_2_0_draft"></a>Import interface wrpc:keyvalue/store@0.2.0-draft</h2>
 <p>A keyvalue interface that provides eventually consistent key-value operations.</p>
 <p>Each of these operations acts on a single key-value pair.</p>
 <p>The value in the key-value pair is defined as a <code>u8</code> byte array and the intention is that it is
@@ -166,7 +166,7 @@ for more information.</p>
 <ul>
 <li><a name="list_keys.0"></a> result&lt;<a href="#key_response"><a href="#key_response"><code>key-response</code></a></a>, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h2><a name="wrpc:keyvalue_atomics_0.2.0_draft"></a>Import interface wrpc:keyvalue/atomics@0.2.0-draft</h2>
+<h2><a name="wrpc_keyvalue_atomics_0_2_0_draft"></a>Import interface wrpc:keyvalue/atomics@0.2.0-draft</h2>
 <p>A keyvalue interface that provides atomic operations.</p>
 <p>Atomic operations are single, indivisible operations. When a fault causes an atomic operation to
 fail, it will appear to the invoker of the atomic operation that the action either completed
@@ -198,7 +198,7 @@ to the given delta.</p>
 <ul>
 <li><a name="increment.0"></a> result&lt;<code>u64</code>, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h2><a name="wrpc:keyvalue_batch_0.2.0_draft"></a>Import interface wrpc:keyvalue/batch@0.2.0-draft</h2>
+<h2><a name="wrpc_keyvalue_batch_0_2_0_draft"></a>Import interface wrpc:keyvalue/batch@0.2.0-draft</h2>
 <p>A keyvalue interface that provides batch operations.</p>
 <p>A batch operation is an operation that operates on multiple keys at once.</p>
 <p>Batch operations are useful for reducing network round-trip time. For example, if you want to

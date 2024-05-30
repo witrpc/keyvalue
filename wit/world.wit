@@ -24,3 +24,12 @@ world watch-service {
 	include imports;
 	export watcher;
 }
+
+world client {
+    include imports;
+}
+
+world server {
+    export atomics;
+    export store;
+}

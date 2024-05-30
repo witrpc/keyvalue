@@ -2,12 +2,72 @@
 name = "wrpc-interface-keyvalue"
 version = "0.14.0"
 description = "wRPC keyvalue interface"
-
 authors = ["Roman Volosatovs <rvolosatovs@riseup.net>"]
 categories = ["wasm"]
 edition = "2021"
 license = "Apache-2.0 WITH LLVM-exception"
 repository = "https://github.com/wrpc/keyvalue"
 
+[features]
+default = ["bin", "nats"]
+
+bin = [
+    "dep:anyhow",
+    "dep:clap",
+    "dep:serde",
+    "dep:serde_json",
+    "dep:tokio",
+    "dep:tracing",
+    "dep:wrpc-cli",
+    "tokio/io-std",
+    "tokio/rt-multi-thread",
+    "tokio/sync",
+]
+nats = ["dep:async-nats", "dep:wrpc-transport-nats", "wrpc-cli/nats"]
+
+[[bin]]
+name = "wrpc-keyvalue-nats"
+required-features = ["bin", "nats"]
+
 [dependencies]
-wit-bindgen-wrpc = "0.3.6"
+anyhow = { workspace = true, optional = true }
+async-nats = { workspace = true, optional = true }
+clap = { workspace = true, features = [
+    "color",
+    "derive",
+    "error-context",
+    "help",
+    "std",
+    "suggestions",
+    "usage",
+], optional = true }
+tracing = { workspace = true, optional = true, features = ["attributes"] }
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+tokio = { workspace = true, optional = true }
+wit-bindgen-wrpc = { workspace = true }
+wrpc-cli = { workspace = true, optional = true }
+wrpc-transport-nats = { workspace = true, optional = true }
+
+[dev-dependencies]
+async-nats = { workspace = true }
+tokio = { workspace = true, features = [
+    "macros",
+    "process",
+    "rt-multi-thread",
+] }
+wrpc-cli = { workspace = true, features = ["nats"] }
+wrpc-transport-nats = { workspace = true }
+
+[workspace.dependencies]
+anyhow = { version = "1", default-features = false }
+async-nats = { version = "0.33", default-features = false }
+clap = { version = "4", default-features = false }
+serde = { version = "1", default-features = false }
+serde_json = { version = "1", default-features = false }
+tokio = { version = "1", default-features = false }
+tracing = { version = "0.1", default-features = false }
+wit-bindgen-wrpc = { version = "0.3.6", default-features = false }
+wrpc-cli = { version = "0.1", default-features = false }
+wrpc-transport = { version = "0.24.3", default-features = false }
+wrpc-transport-nats = { version = "0.21", default-features = false }
